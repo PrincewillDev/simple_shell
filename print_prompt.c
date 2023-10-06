@@ -6,5 +6,5 @@
 
 void print_prompt(void)
 {
-	print("pcsh$ ");
+	printStr("(pcsh) $ ");
 }
