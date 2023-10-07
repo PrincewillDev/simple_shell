@@ -1,63 +1,100 @@
 #include "shell.h"
-/* Function to execute a command from a specific file */
-void executing(char **arrof_str, char **envp)
+
+char *command_path(char *token);
+/**
+ * executing - function to excute programs
+ * @arrStr: array of tokens
+ */
+
+void executing(char **arrStr)
 {
-    pid_t child_process = fork();
+	char *tok = NULL;
+	pid_t child_process;
 
-    if (child_process == 0)
-    {
-        char *command = arrof_str[0]; /* The first argument is the command */
-        char *fullPath = _getenv("PATH"); /* Get the PATH environment variable */
-        char *path;
-        int found = 0;
+	if (arrStr)
+	{
+		/* Get the full path of the command */
+		tok = command_path(arrStr[0]);
+		if (tok)
+		{
+			/* Create a child process to run the command */
+			child_process = fork();
+			if (child_process == 0)
+			{
+				/*Execute the command with arguments or path in the child process*/
+				if (execve(tok, arrStr, NULL) == -1)
+					perror(getenv("PWD"));
+				exit(EXIT_FAILURE);
+			}
+			else if (child_process == -1)
+				exit(EXIT_FAILURE);
+			else
+				wait(NULL);
+		}
+		else
+			perror("./hsh");
+		/*Free memory*/
+		free(tok);
+	}
+}
 
-        /* Tokenize the PATH into individual directories */
-        char *token = strtok(fullPath, ":");
-        while (token != NULL)
-        {
-            /* Construct the full path to the executable */
-            path = (char *)malloc(strlen(token) + strlen(command) + 2);
-            if (path == NULL)
-            {
-                perror("malloc failed");
-                exit(EXIT_FAILURE);
-            }
-            strcpy(path, token);
-            strcat(path, "/");
-            strcat(path, command);
+/**
+ * command_path - Function to know if the input is path or command
+ * @token: the input from user
+ * Return: the true path for command or path
+ *         or NULL if there it's not command
+ */
+char *command_path(char *token)
+{
+	int i;
+	char *path, *path_cpy, *tmp_path;
+	char *home_path = getenv("PATH");
+	char *delimeter = ":";
+	char **paths = NULL;
 
-            /* Check if the file exists and is executable */
-            if (access(path, X_OK) == 0)
-            {
-                found = 1;
-                break;
-            }
+	/*Check if the home path is valid*/
+	if (home_path == NULL || strlen(home_path) == 0)
+		return (NULL);
 
-            free(path);
-            token = strtok(NULL, ":");
-        }
+	/*Check if the command is already a full path*/
+	for (i = 0; token[i]; i++)
+	{
+		if (token[i] == '/')
+			return (token);
+	}
 
-        if (found)
-        {
-            if (execve(path, arrof_str, envp) == -1)
-            {
-                perror("execve failed");
-                exit(EXIT_FAILURE);
-            }
-        }
-        else
-        {
-            printf("%s: command not found\n", command);
-            exit(EXIT_FAILURE);
-        }
-    }
-    else if (child_process == -1)
-    {
-        perror("fork failed");
-        exit(EXIT_FAILURE);
-    }
-    else
-    {
-        wait(NULL);
-    }
+	/*Copy the home path to avoid modifying it*/
+	path_cpy = malloc(sizeof(*path_cpy) * (strlen(home_path) + 1));
+	tmp_path = malloc(sizeof(*tmp_path) * (strlen(home_path) + 1));
+	strcpy(path_cpy, home_path);
+	strcpy(tmp_path, home_path);
+
+	/*Parse the home path into an array of paths*/
+	paths = parsingInput(tmp_path, delimeter);
+
+	/*Loop through the paths and append the command name*/
+	for (i = 0; paths[i]; i++)
+	{
+		path = strdup(paths[i]);
+		path = strcat(paths[i], "/");
+		path = strcat(path, token);
+
+		/*Check if the command exists in the current path*/
+		if (access(path, F_OK) == 0)
+		{
+			/*Free memory*/
+			free(path_cpy);
+			free(tmp_path);
+			free(paths);
+			return (path);
+		}
+		free(path);
+	}
+
+	/*Free memory*/
+	free(path_cpy);
+	free(tmp_path);
+	free(paths);
+
+	return (NULL);
 }

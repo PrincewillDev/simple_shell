@@ -7,17 +7,26 @@
  * Return: number of tokenized strings
  */
 
-int numTokens(char *str, char *d)
+int numTokens(const char *str,const char *d)
 {
 	int num = 0;
 	char *tokenized;
+	char *cpy_str;
 
-	tokenized = strtok(str, d);
+	/*Copy the string to avoid modifying it*/
+	cpy_str = malloc(sizeof(char) * (strlen(str) + 1));
+	strcpy(cpy_str, str);
+
+	/*Split the string by the delimiter and count the tokens*/
+	tokenized = strtok(cpy_str, d);
 	while (tokenized)
 	{
 		num++;
-tokenized = strtok(NULL, " ");
+		tokenized = strtok(NULL, d);
 	}
+
+	/*Free memory*/
+	free(cpy_str);
 	return (++num);
 }
 
@@ -28,18 +37,35 @@ tokenized = strtok(NULL, " ");
  * @d: delimiter
  */
 
-void parsingInput(char **arroftok, char *str, char *d)
+char **parsingInput(char *str, char *d)
 {
+	char **arroftok = NULL;
 	int i = 0;
-	char *tokenized;
+	char *tokenized = NULL, *cpy_str;
+	int n_tokens;
 
-	tokenized = strtok(str, d);
+	/*Copy the string to avoid modifying it*/
+	cpy_str = malloc(sizeof(char) * (strlen(str) + 1));
+	strcpy(cpy_str, str);
+
+	/*Count the number of tokens in the string*/
+	n_tokens = numTokens(str, d);
+
+	/*Allocate memory for the array of tokens*/
+	arroftok = malloc(sizeof(char *) * (n_tokens + 1));
+
+    /*Split the string by the delimiter and store the tokens in the array*/
+	tokenized = strtok(cpy_str, d);
 	while (tokenized)
 	{
-		arroftok[i] = malloc(sizeof(char) * strlen(tokenized));
-		strcpy(arroftok[i], tokenized);
+		arroftok[i] = strdup(tokenized);
 		tokenized = strtok(NULL, d);
 		i++;
 	}
 	arroftok[i] = NULL;
+
+	/*Free memory*/
+	free(cpy_str);
+
+	return (arroftok);
 }

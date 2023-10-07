@@ -37,11 +37,17 @@ int main(int argc, char **argv)
 		strcpy(cpy_linebuffer, linebuffer);
 		/* Number of tokens */
 		n_tokens = numTokens(linebuffer, delim);
+		
 		/*Allocate memory for argv: This memory location for pointer to pointer */
 		argv = malloc(sizeof(char *) * n_tokens);
+		if (argv == NULL)
+		{
+			perror("hsh: memory allocation failed");
+			return (1);
+		}
 		/*Note: I think we can use linked list here*/
-		parsingInput(argv, cpy_linebuffer, delim);
-		executing(argv, NULL);
+		argv = parsingInput(cpy_linebuffer, delim);
+		executing(argv);
 	}
 	/*free memory*/
 	free(argv);
