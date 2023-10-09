@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <ctype.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 
@@ -22,5 +23,8 @@ char **parsingInput(char *str, char *d);
 
 /*Executing Functions*/
 void executing(char **arrof_str);
+
+/*Built-in functions*/
+void exit_func(char **tok);
 
 #endif /* SHELL_H */

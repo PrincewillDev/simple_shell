@@ -17,6 +17,11 @@ void executing(char **arrStr)
 		tok = command_path(arrStr[0]);
 		if (tok)
 		{
+			if (strcmp(tok, "exit") == 0)
+			{
+				exit_func(arrStr);
+				return;
+			}
 			/* Create a child process to run the command */
 			child_process = fork();
 			if (child_process == 0)
@@ -32,9 +37,10 @@ void executing(char **arrStr)
 				wait(NULL);
 		}
 		else
-			perror("./hsh");
+			perror(getenv("PWD"));
 		/*Free memory*/
 		free(tok);
+		free(arrStr);
 	}
 }
 
@@ -47,7 +53,7 @@ void executing(char **arrStr)
 char *command_path(char *token)
 {
 	int i;
-	char *path, *path_cpy, *tmp_path;
+	char *path, *path_cpy;
 	char *home_path = getenv("PATH");
 	char *delimeter = ":";
 	char **paths = NULL;
@@ -55,6 +61,9 @@ char *command_path(char *token)
 	/*Check if the home path is valid*/
 	if (home_path == NULL || strlen(home_path) == 0)
 		return (NULL);
+
+	if (strcmp(token, "exit") == 0)
+		return (token);
 
 	/*Check if the command is already a full path*/
 	for (i = 0; token[i]; i++)
@@ -65,12 +74,10 @@ char *command_path(char *token)
 
 	/*Copy the home path to avoid modifying it*/
 	path_cpy = malloc(sizeof(*path_cpy) * (strlen(home_path) + 1));
-	tmp_path = malloc(sizeof(*tmp_path) * (strlen(home_path) + 1));
 	strcpy(path_cpy, home_path);
-	strcpy(tmp_path, home_path);
 
 	/*Parse the home path into an array of paths*/
-	paths = parsingInput(tmp_path, delimeter);
+	paths = parsingInput(path_cpy, delimeter);
 
 	/*Loop through the paths and append the command name*/
 	for (i = 0; paths[i]; i++)
@@ -84,7 +91,7 @@ char *command_path(char *token)
 		{
 			/*Free memory*/
 			free(path_cpy);
-			free(tmp_path);
+			free(token);
 			free(paths);
 			return (path);
 		}
@@ -93,7 +100,7 @@ char *command_path(char *token)
 
 	/*Free memory*/
 	free(path_cpy);
-	free(tmp_path);
+	free(token);
 	free(paths);
 
 	return (NULL);

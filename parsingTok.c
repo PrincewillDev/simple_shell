@@ -7,7 +7,7 @@
  * Return: number of tokenized strings
  */
 
-int numTokens(const char *str,const char *d)
+int numTokens(const char *str, const char *d)
 {
 	int num = 0;
 	char *tokenized;
@@ -32,9 +32,9 @@ int numTokens(const char *str,const char *d)
 
 /**
  * parsingInput - function to parse input array and store it
- * @arroftok: array of strings to store tokeniezed
  * @str: string input
  * @d: delimiter
+ * Return: array of strings from parsing line
  */
 
 char **parsingInput(char *str, char *d)
