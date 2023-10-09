@@ -14,8 +14,7 @@ int numTokens(const char *str, const char *d)
 	char *cpy_str;
 
 	/*Copy the string to avoid modifying it*/
-	cpy_str = malloc(sizeof(char) * (strlen(str) + 1));
-	strcpy(cpy_str, str);
+	cpy_str = strdup(str);
 
 	/*Split the string by the delimiter and count the tokens*/
 	tokenized = strtok(cpy_str, d);
@@ -27,7 +26,7 @@ int numTokens(const char *str, const char *d)
 
 	/*Free memory*/
 	free(cpy_str);
-	return (++num);
+	return (num);
 }
 
 /**
@@ -45,8 +44,7 @@ char **parsingInput(char *str, char *d)
 	int n_tokens;
 
 	/*Copy the string to avoid modifying it*/
-	cpy_str = malloc(sizeof(char) * (strlen(str) + 1));
-	strcpy(cpy_str, str);
+	cpy_str = strdup(str);
 
 	/*Count the number of tokens in the string*/
 	n_tokens = numTokens(str, d);

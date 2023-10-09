@@ -9,7 +9,7 @@
 
 int main(int argc, char **argv)
 {
-	char *linebuffer = NULL;
+	char *linebuffer = NULL, *cpy_linebuffer = NULL;
 	size_t n = 0;
 	ssize_t num_chars;
 	char *delim = " \n";
@@ -23,7 +23,9 @@ int main(int argc, char **argv)
 		num_chars = getline(&linebuffer, &n, stdin);
 		/* Handling EOF or Ctrl D */
 		if (num_chars == -1)
-			return (-1);
+			break;
+		cpy_linebuffer = strdup(linebuffer);
+		n_tokens = numTokens(linebuffer, delim);
 		/*Allocate memory for argv: This memory location for pointer to pointer */
 		argv = malloc(sizeof(char *) * n_tokens);
 		if (argv == NULL)
@@ -34,9 +36,10 @@ int main(int argc, char **argv)
 		/*Note: I think we can use linked list here*/
 		argv = parsingInput(linebuffer, delim);
 		executing(argv);
+		free(argv);
 	}
 	/*free memory*/
-	free(argv);
+	free(cpy_linebuffer);
 	free(linebuffer);
 	return (0);
 }

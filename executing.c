@@ -28,11 +28,16 @@ void executing(char **arrStr)
 			{
 				/*Execute the command with arguments or path in the child process*/
 				if (execve(tok, arrStr, NULL) == -1)
+				{
 					perror(getenv("PWD"));
-				exit(EXIT_FAILURE);
+					exit(EXIT_FAILURE);
+				}
 			}
 			else if (child_process == -1)
+			{
+				perror("Fork failed");
 				exit(EXIT_FAILURE);
+			}
 			else
 				wait(NULL);
 		}
@@ -40,7 +45,6 @@ void executing(char **arrStr)
 			perror(getenv("PWD"));
 		/*Free memory*/
 		free(tok);
-		free(arrStr);
 	}
 }
 
@@ -73,8 +77,7 @@ char *command_path(char *token)
 	}
 
 	/*Copy the home path to avoid modifying it*/
-	path_cpy = malloc(sizeof(*path_cpy) * (strlen(home_path) + 1));
-	strcpy(path_cpy, home_path);
+	path_cpy = strdup(home_path);
 
 	/*Parse the home path into an array of paths*/
 	paths = parsingInput(path_cpy, delimeter);
@@ -91,7 +94,6 @@ char *command_path(char *token)
 		{
 			/*Free memory*/
 			free(path_cpy);
-			free(token);
 			free(paths);
 			return (path);
 		}
@@ -100,7 +102,6 @@ char *command_path(char *token)
 
 	/*Free memory*/
 	free(path_cpy);
-	free(token);
 	free(paths);
 
 	return (NULL);
