@@ -22,9 +22,10 @@ int numTokens(const char *str, const char *d);
 char **parsingInput(char *str, char *d);
 
 /*Executing Functions*/
-void executing(char **arrof_str);
+void executing(char **arrof_str, char **environ);
 
 /*Built-in functions*/
 void exit_func(char **tok);
+int _printenv(char **tok);
 
 #endif /* SHELL_H */

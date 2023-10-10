@@ -4,9 +4,9 @@ char *command_path(char *token);
 /**
  * executing - function to excute programs
  * @arrStr: array of tokens
+ * @environ: environment variable table
  */
-
-void executing(char **arrStr)
+void executing(char **arrStr, char **environ)
 {
 	char *tok = NULL;
 	pid_t child_process;
@@ -22,12 +22,17 @@ void executing(char **arrStr)
 				exit_func(arrStr);
 				return;
 			}
+			if (strcmp(tok, "env") == 0)
+			{
+				_printenv(environ);
+				return;
+			}
 			/* Create a child process to run the command */
 			child_process = fork();
 			if (child_process == 0)
 			{
 				/*Execute the command with arguments or path in the child process*/
-				if (execve(tok, arrStr, NULL) == -1)
+				if (execve(tok, arrStr, environ) == -1)
 				{
 					perror(getenv("PWD"));
 					exit(EXIT_FAILURE);
