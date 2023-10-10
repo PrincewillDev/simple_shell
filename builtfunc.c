@@ -2,22 +2,22 @@
 
 /**
  * exit_func - built in function to exit
- * @tok: the command which entered by user
+ * @com: the command which entered by user
  */
 
-void exit_func(char **tok)
+void exit_func(char **com)
 {
-	int st, i;
+	int stat, i;
 
-	if (tok[1] == NULL)
+	if (com[1] == NULL)
 	{
-		free(tok);
+		free(com);
 		exit(EXIT_SUCCESS);
 	}
 
-	for (i = 0; tok[1][i]; i++)
+	for (i = 0; com[1][i]; i++)
 	{
-		if (isalpha(tok[1][i])) /*0 if int, 1 if upper, 2 if lower*/
+		if (isalpha(com[1][i])) /*0 if int, 1 if upper, 2 if lower*/
 		{
 			/*print that error because it's char*/
 			printStr("Illegal number\n");
@@ -25,9 +25,9 @@ void exit_func(char **tok)
 		}
 		else
 		{
-			st = atoi(tok[1]);
-			free(tok);
-			exit(st);
+			stat = atoi(com[1]);
+			free(com);
+			exit(stat);
 		}
 	}
 }
