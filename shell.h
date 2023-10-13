@@ -17,9 +17,10 @@ void printStr(char *str);
 void print_prompt(void);
 int getuserInput(void);
 
-/*Parsing Functions*/
-int numTokens(const char *str, const char *d);
-char **parsingInput(char *str, char *d);
+/*Parsing and helpers Functions*/
+int check_del(char c, char *d);
+int numWords(char *str, char *d);
+char **strword(char *str, char *d);
 
 /*Executing Functions*/
 void executing(char **arrof_str, char **environ);

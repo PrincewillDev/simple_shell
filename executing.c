@@ -8,7 +8,7 @@ char *command_path(char *token);
  */
 void executing(char **arrStr, char **environ)
 {
-	char *tok = NULL;
+	char *tok;
 	pid_t child_process;
 
 	if (arrStr)
@@ -62,17 +62,14 @@ void executing(char **arrStr, char **environ)
 char *command_path(char *token)
 {
 	int i;
-	char *path, *path_cpy;
+	char *path, *full_path;
 	char *home_path = getenv("PATH");
 	char *delimeter = ":";
-	char **paths = NULL;
+	char **paths;
 
 	/*Check if the home path is valid*/
 	if (home_path == NULL || strlen(home_path) == 0)
 		return (NULL);
-
-	if (strcmp(token, "exit") == 0)
-		return (token);
 
 	/*Check if the command is already a full path*/
 	for (i = 0; token[i]; i++)
@@ -81,33 +78,35 @@ char *command_path(char *token)
 			return (token);
 	}
 
-	/*Copy the home path to avoid modifying it*/
-	path_cpy = strdup(home_path);
-
 	/*Parse the home path into an array of paths*/
-	paths = parsingInput(path_cpy, delimeter);
+	paths = strword(home_path, delimeter);
 
 	/*Loop through the paths and append the command name*/
 	for (i = 0; paths[i]; i++)
 	{
-		path = strdup(paths[i]);
-		path = strcat(paths[i], "/");
-		path = strcat(path, token);
+		path = malloc(sizeof(char) * (strlen(paths[i]) + strlen(token) + 2));
+		/*strcpy(path, paths[i]);*/
+		/*path = strcat(paths[i], "/");*/
+		/*path = strcat(path, token);*/
+
+		if (path == NULL)
+		{
+			fprintf(stderr, "Memory allocation failed\n");
+			exit(1);
+		}
+		strncpy(path, paths[i], strlen(paths[i]) + 1);
+		path[strlen(paths[i])] = '/';
+		path[strlen(paths[i]) + 1] = '\0';
+		full_path = strcat(path, token);
+
 
 		/*Check if the command exists in the current path*/
-		if (access(path, F_OK) == 0)
-		{
-			/*Free memory*/
-			free(path_cpy);
-			free(paths);
-			return (path);
-		}
+		if (access(full_path, F_OK) == 0)
+			return (full_path);
 		free(path);
 	}
 
 	/*Free memory*/
-	free(path_cpy);
 	free(paths);
-
-	return (NULL);
+	return (token);
 }

@@ -10,7 +10,7 @@
 
 int main(int argc, char **argv, char **environ)
 {
-	char *linebuffer = NULL, *cpy_linebuffer = NULL;
+	char *linebuffer;
 	size_t n = 0;
 	ssize_t num_chars;
 	char *delim = " \n";
@@ -27,23 +27,21 @@ int main(int argc, char **argv, char **environ)
 		{	printStr("\n");
 			break;
 		}
-		/* cpy_linebuffer appears to be not useful in this program and should be removed is not useful */
-		cpy_linebuffer = strdup(linebuffer);
-		n_tokens = numTokens(linebuffer, delim);
+
+		n_tokens = numWords(linebuffer, delim);
 		/*Allocate memory for argv: This memory location for pointer to pointer */
-		argv = malloc(sizeof(char *) * n_tokens);
+		argv = malloc(sizeof(char *) * (n_tokens + 1));
 		if (argv == NULL)
 		{
 			perror("hsh: memory allocation failed");
-			return (1);
+			return (2);
 		}
 		/*Note: I think we can use linked list here*/
-		argv = parsingInput(linebuffer, delim);
+		argv = strword(linebuffer, delim);
 		executing(argv, environ);
 		free(argv);
 	}
 	/*free memory*/
-	free(cpy_linebuffer);
 	free(linebuffer);
 	return (0);
 }
