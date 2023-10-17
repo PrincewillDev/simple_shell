@@ -17,22 +17,22 @@ void executing(char **arrStr, char **environ)
 		tok = command_path(arrStr[0]);
 		if (tok)
 		{
-			if (strcmp(tok, "exit") == 0)
+			if (_strcmp(tok, "exit") == 0)
 			{
 				exit_func(arrStr);
 				return;
 			}
-			if (strcmp(tok, "setenv") == 0)
+			if (_strcmp(tok, "setenv") == 0)
 			{
 				_setenv(arrStr[1], arrStr[2], 1);
 				return;
 			}
-			if (strcmp(tok, "unsetenv") == 0)
+			if (_strcmp(tok, "unsetenv") == 0)
 			{
 				_unsetenv(arrStr[2]);
 				return;
 			}
-			if (strcmp(tok, "env") == 0)
+			if (_strcmp(tok, "env") == 0)
 			{
 				_printenv(environ);
 				return;
@@ -78,7 +78,7 @@ char *command_path(char *token)
 	char **paths;
 
 	/*Check if the home path is valid*/
-	if (home_path == NULL || strlen(home_path) == 0)
+	if (home_path == NULL || _strlen(home_path) == 0)
 		return (NULL);
 
 	/*Check if the command is already a full path*/
@@ -94,7 +94,7 @@ char *command_path(char *token)
 	/*Loop through the paths and append the command name*/
 	for (i = 0; paths[i]; i++)
 	{
-		path = malloc(sizeof(char) * (strlen(paths[i]) + strlen(token) + 2));
+		path = malloc(sizeof(char) * (_strlen(paths[i]) + _strlen(token) + 2));
 		/*strcpy(path, paths[i]);*/
 		/*path = strcat(paths[i], "/");*/
 		/*path = strcat(path, token);*/
@@ -104,10 +104,10 @@ char *command_path(char *token)
 			fprintf(stderr, "Memory allocation failed\n");
 			exit(1);
 		}
-		strncpy(path, paths[i], strlen(paths[i]) + 1);
-		path[strlen(paths[i])] = '/';
-		path[strlen(paths[i]) + 1] = '\0';
-		full_path = strcat(path, token);
+		strncpy(path, paths[i], _strlen(paths[i]) + 1);
+		path[_strlen(paths[i])] = '/';
+		path[_strlen(paths[i]) + 1] = '\0';
+		full_path = _strcat(path, token);
 
 
 		/*Check if the command exists in the current path*/
