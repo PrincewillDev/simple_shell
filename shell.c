@@ -20,13 +20,12 @@ int main(int argc, char **argv)
 	while (true)
 	{
 		/* Printing prompt and get input from user*/
-		print_prompt();
+		if (isatty(STDIN_FILENO))
+			print_prompt();
 		num_chars = getline(&linebuffer, &n, stdin);
 		/* Handling EOF or Ctrl D */
 		if (num_chars == -1)
-		{	printStr("\n");
 			break;
-		}
 
 		n_tokens = numWords(linebuffer, delim);
 		/*Allocate memory for argv: This memory location for pointer to pointer */
