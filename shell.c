@@ -7,8 +7,8 @@
  * @environ: environment variable table
  * Return: 0 on success
  */
-
-int main(int argc, char **argv, char **environ)
+extern char **environ;
+int main(int argc, char **argv)
 {
 	char *linebuffer;
 	size_t n = 0;
