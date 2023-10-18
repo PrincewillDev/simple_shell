@@ -10,7 +10,7 @@
 
 int main(int argc, char **argv, char **environ)
 {
-	char *linebuffer;
+	char *linebuffer, *filename = argv[0];
 	size_t n = 0;
 	ssize_t num_chars;
 	char *delim = " \n";
