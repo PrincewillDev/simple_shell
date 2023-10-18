@@ -16,6 +16,6 @@ void printStr(char *str)
 
 void print_prompt(void)
 {
-	printStr("(pcsh) $ ");
+	printStr("(pcsh)$ ");
 }
 

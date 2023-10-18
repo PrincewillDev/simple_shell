@@ -23,7 +23,6 @@ int main(int argc, char **argv, char **environ)
 		if (isatty(STDIN_FILENO))
 		{
 			print_prompt();
-			return 0;	
 		}
 		num_chars = getline(&linebuffer, &n, stdin);
 		/* Handling EOF or Ctrl D */
