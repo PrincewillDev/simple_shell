@@ -44,7 +44,7 @@ void executing(char **arrStr, char **environ)
 				/*Execute the command with arguments or path in the child process*/
 				if (execve(tok, arrStr, environ) == -1)
 				{
-					perror(getenv("PWD"));
+					perror("./hsh");
 					exit(EXIT_FAILURE);
 				}
 			}
