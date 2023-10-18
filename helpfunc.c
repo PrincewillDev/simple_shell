@@ -38,7 +38,7 @@ int numWords(char *str, char *d)
  * strword - function to change string to words
  * @str: line that I want to divid it into words
  * @d: delimter
- * Retrun: Array of strings
+ * Return: Array of strings
  */
 char **strword(char *str, char *d)
 {
