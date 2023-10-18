@@ -11,6 +11,9 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+
+extern char **environ;
+
 /***********Functions***********/
 /*Function to print string with write*/
 void printStr(char *str);

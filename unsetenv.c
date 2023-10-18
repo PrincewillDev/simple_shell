@@ -1,7 +1,10 @@
 #include "shell.h"
 
-extern char **environ;
-
+/**
+ * _unsetenv - Remove an environment variable;
+ * @vname: variable name
+ * Return: state of working
+ */
 int _unsetenv(const char *vname)
 {
 	int i, j;
@@ -12,9 +15,10 @@ int _unsetenv(const char *vname)
 		return (-1);
 	}
 
-	for (i = 0; environ[i] != NULL; i++) 
-    	{
-		if (strncmp(vname, environ[i], strlen(vname)) == 0 && environ[i][strlen(vname)] == '=')
+	for (i = 0; environ[i] != NULL; i++)
+	{
+		if (strncmp(vname, environ[i], strlen(vname)) == 0
+				&& environ[i][strlen(vname)] == '=')
 		{
 			free(environ[i]);
 			for (j = i; environ[j] != NULL; j++)
