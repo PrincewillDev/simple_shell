@@ -112,11 +112,14 @@ char *command_path(char *token)
 
 		/*Check if the command exists in the current path*/
 		if (access(full_path, F_OK) == 0)
+		{
 			return (full_path);
+		}
 		free(path);
 	}
 
 	/*Free memory*/
 	free(paths);
+	free(full_path);
 	return (token);
 }

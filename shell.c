@@ -25,8 +25,10 @@ int main(int argc, char **argv)
                 num_chars = getline(&linebuffer, &n, stdin);
                 /* Handling EOF or Ctrl D */
                 if (num_chars == -1)
-                        break;
-
+		{
+			printStr("\n");
+			return(-1);
+		}
                 /*n_tokens = numWords(linebuffer, delim);*/
                 /*Allocate memory for argv: This memory location for pointer to pointer */
                 /*argv = malloc(sizeof(char *) * (n_tokens + 1));*/
