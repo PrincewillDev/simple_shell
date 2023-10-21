@@ -7,7 +7,7 @@
 
 char *readcmdfile(void)
 {
-	size_t buffsize = 1024, i = 0;
+	size_t buffsize = 1024, i = 0, newbuffsize;
 	int charz;
 	char *cmdline, *cmdlinecp;
 
@@ -36,15 +36,18 @@ char *readcmdfile(void)
 			cmdline[i] = charz;
 		if (i + 1 == buffsize)
 		{
-			buffsize *= buffsize;
+			newbuffsize = buffsize * 2;
 			cmdlinecp = malloc(sizeof(char) * buffsize);
 			if (cmdlinecp == NULL)
 			{
 				_printf("hsh: read_line: Memory allocation error");
+				free(cmdline);
 				return (NULL);
 			}
-			strcpy(cmdlinecp, cmdline);
+			strncpy(cmdlinecp, cmdline, i);
 			free(cmdline);
+			buffsize = newbuffsize;
+
 			cmdline = NULL;
 			cmdline = cmdlinecp;
 		}
